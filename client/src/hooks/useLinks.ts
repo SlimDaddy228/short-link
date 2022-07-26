@@ -1,19 +1,32 @@
-import {useEffect, useState} from 'react'
-import {AxiosError} from 'axios'
-import {IUsers} from "../models/users";
-import {getUsers} from "../http/userAPI";
+import { useEffect, useState } from 'react'
+import { AxiosError } from 'axios'
+import { getLinks, removeLinkById } from "../http/linksAPI";
+import { GridRowParams } from "@mui/x-data-grid";
 
-export const useUsers = () => {
-    const [users, setUsers] = useState<IUsers[]>([])
+export const useLinks = () => {
+    const [links, setLinks] = useState<any>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
-    async function fetchUsers() {
+    const removeLink = async (params: GridRowParams) => {
+        try {
+            await removeLinkById(Number(params.id))
+            setLinks((prevLinks: any) => {
+                return prevLinks.filter((data: any) => data.link !== params.row.link)
+            })
+        } catch (e: unknown) {
+            const error = e as AxiosError
+            setLoading(false)
+            setError(error.message)
+        }
+    }
+
+    async function fetchLinks() {
         try {
             setError('')
             setLoading(true)
-            const createdUsers = await getUsers()
-            setUsers([...createdUsers])
+            const createdLinks = await getLinks()
+            setLinks([...createdLinks])
             setLoading(false)
         } catch (e: unknown) {
             const error = e as AxiosError
@@ -23,8 +36,8 @@ export const useUsers = () => {
     }
 
     useEffect(() => {
-        fetchUsers()
+        fetchLinks()
     }, [])
 
-    return [ users, error, loading ]
+    return [links, error, loading, removeLink]
 }
