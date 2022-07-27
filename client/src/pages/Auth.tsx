@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {useLocation, useNavigate} from "react-router-dom";
-import {ADMIN_ROUTE, LOGIN_ROUTE} from "../consts/routes";
+import {LOGIN_ROUTE, MAIN_ROUTE} from "../consts/routes";
 import {login, registration} from "../http/userAPI";
 import {observer} from "mobx-react";
 import {Context} from "../index";
@@ -26,7 +26,7 @@ const Auth = observer(() => {
             const data = isLogin ? await login(email, password) : await registration(email, password)
             user.setData(data)
             user.setIsAuth(true)
-            navigate(ADMIN_ROUTE)
+            navigate(MAIN_ROUTE)
         } catch (e: any) {
             alert(e.response.data[0] || e.response.data.message)
         }
@@ -37,9 +37,9 @@ const Auth = observer(() => {
             className={'flex justify-center items-center'}
             style={{height: window.innerHeight - 80}} // 80 - height navbar
         >
-            <div className='h-screen flex'>
-                <div className='w-96 m-auto bg-gray-50 rounded-lg border border-gray-400 shadow-default py-10 px-16'>
-                    <h1 className='text-2xl font-medium text-primary mt-4 mb-12 text-center'>
+            <div className='h-fit flex'>
+                <div className='w-96 m-auto rounded-lg border border-gray-400 shadow-default py-10 px-16'>
+                    <h1 className='text-2xl font-medium mt-4 mb-12 text-center'>
                         {`${isLogin ? 'Log in to your account' : 'Registration your account'}`}
                     </h1>
                     <form onSubmit={handleFormSubmit}>
@@ -48,7 +48,7 @@ const Auth = observer(() => {
                             <input
                                 type='email'
                                 id='email'
-                                className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                                className={`w-full p-2 border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                                 placeholder='Your Email'
                             />
                         </div>
@@ -58,7 +58,7 @@ const Auth = observer(() => {
                             <input
                                 type='password'
                                 id='password'
-                                className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                                className={`w-full p-2 border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                                 placeholder='Your Password'
                             />
                         </div>

@@ -46,8 +46,8 @@ const CreateLink = observer(() => {
             style={{ height: window.innerHeight - 120 }} // 120 - height navbar
         >
             <div className='flex'>
-                <div className='w-96 m-auto bg-gray-50 rounded-lg border border-gray-400 shadow-default py-10 px-16'>
-                    <h1 className='text-2xl font-medium text-primary mt-4 mb-12 text-center'>
+                <div className='w-96 m-auto rounded-lg border border-gray-400 shadow-default py-10 px-16'>
+                    <h1 className='text-2xl font-medium mt-4 mb-12 text-center'>
                         {`Create short link`}
                     </h1>
                     <form onSubmit={result ? copyLink : createLink}>
@@ -56,17 +56,16 @@ const CreateLink = observer(() => {
                             <input
                                 type='url'
                                 id='redirectLink'
-                                className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                                className={`w-full p-2 border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                                 placeholder='www.example.com/qwertyQWERTY'
                             />
                         </div>
-
                         <div>
                             <label htmlFor='Short Link Name'>{`Alias (Optional)`}</label>
                             <input
                                 type='text'
                                 id='link'
-                                className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                                className={`w-full p-2 border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                                 placeholder={`${user.isAuth ? "rules" : "Register for used this"}`}
                                 disabled={!user.isAuth}
                             />
@@ -77,13 +76,12 @@ const CreateLink = observer(() => {
                             <input
                                 type='url'
                                 id='resultLink'
-                                className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                                className={`w-full p-2 border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                                 placeholder={`Created link`}
                                 value={result}
                                 disabled={!result}
                             />
                         </div>
-
                         <div className='flex justify-center items-center mt-6'>
                             <button
                                 className={`bg-green-800 py-2 px-4 text-sm text-white rounded focus:outline-none`}

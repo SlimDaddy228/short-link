@@ -23,10 +23,13 @@ const App = observer(() => {
     }
 
     return (
-        <BrowserRouter>
-            <Navbar />
-            <AppRouter />
-        </BrowserRouter>
+        <div style={{width: '100vw', height: '100vh'}} className={'dark:text-white'}>
+            <BrowserRouter>
+                <Navbar />
+                <AppRouter />
+            </BrowserRouter>
+        </div>
+
     )
 });
 
