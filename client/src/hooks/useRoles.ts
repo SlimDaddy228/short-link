@@ -7,9 +7,13 @@ export const useRoles = (permission: string) => {
     const { user } = useContext(Context)
 
     const checkHasRole = () => {
-        const isHasRole = toJS(user.data.roles).some(({ value }: any) => {
+        const roles = toJS(user.data.roles)
+        if (!roles) return;
+
+        const isHasRole = roles.some(({ value }: any) => {
             return value.toUpperCase() === permission.toUpperCase()
         })
+
         setHasRole(isHasRole)
     }
 
