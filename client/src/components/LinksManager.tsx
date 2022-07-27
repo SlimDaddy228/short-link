@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useLinks } from "../hooks/useLinks";
-import { Tooltip } from "@mui/material";
+import {Alert, Tooltip} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import CircleLoader from "./CircleLoader";
@@ -46,10 +46,14 @@ const LinksManager = () => {
                 },
             ]
         )
-    }, [links]);
+    }, [removeLink]);
 
     if (loading) {
         return <CircleLoader />
+    }
+
+    if (error) {
+        return <Alert severity="error">{error}</Alert>
     }
 
     return (
