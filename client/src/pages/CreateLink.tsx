@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import { Context } from "../index";
 import { generateLink } from "../http/linksAPI";
 import { generateLinkId } from "../utils/utils";
+import { APPLICATION_ROUTES } from '../consts/routes';
 
 const CreateLink = observer(() => {
     const { user } = useContext(Context)
@@ -19,6 +20,9 @@ const CreateLink = observer(() => {
         const { link, redirectLink } = target
 
         if (!redirectLink.value) return alert('Введите основную ссылку');
+
+        const isApplicationLink = `/${link.value}`.indexOf(APPLICATION_ROUTES) !== -1;
+        if (isApplicationLink) return alert('Такую ссылку нельзя создать');
 
         try {
             const result = await generateLink(link.value || generateLinkId(5), redirectLink.value)

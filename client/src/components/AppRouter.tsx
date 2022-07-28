@@ -1,24 +1,33 @@
-import { useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { Route, Routes } from 'react-router'
 import { authRoutes, publicRoutes, unAuthRouts } from "../routes";
 import { Navigate, useLocation } from "react-router-dom";
 import { Context } from "../index";
 import { observer } from "mobx-react";
-import { MAIN_ROUTE } from "../consts/routes";
+import { APPLICATION_ROUTES, MAIN_ROUTE } from "../consts/routes";
 import { getRedirectLink } from "../http/linksAPI";
 
 const AppRouter = observer(() => {
     const { user } = useContext(Context)
     const location = useLocation()
 
-    useEffect(() => {
-        if (location.pathname !== MAIN_ROUTE) {
-            const cutLocation = location.pathname.slice(1)
-            getRedirectLink(cutLocation).then(data => {
-                window.location.replace(data.redirectLink)
-            })
+    const redirectToLink = useCallback(async() => {
+        const path = location.pathname
+        const isRedirectLink = path.indexOf(APPLICATION_ROUTES) === -1;
+        if (isRedirectLink && path !== MAIN_ROUTE) {
+            try {
+                const cutLocation = path.slice(1)
+                const redirectLink = await getRedirectLink(cutLocation)
+                window.location.replace(redirectLink)
+            } catch (e: any) {
+                alert(e.response.data.message)
+            }
         }
-    }, [location])
+    }, [location.pathname])
+
+    useEffect(() => {
+        redirectToLink()
+    }, [redirectToLink])
 
     return (
         <Routes>
