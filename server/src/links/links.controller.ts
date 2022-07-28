@@ -48,7 +48,7 @@ export class LinksController {
     }
 
     @ApiOperation({summary: 'Генерация ссылки'})
-    @Post('/generateLink')
+    @Post('/generateLink/create')
     @UsePipes(ValidationPipe)
     generateLink(@Body() linkDto: CreateRedirectLinkDto) {
         return this.linksService.generateLink(linkDto)
