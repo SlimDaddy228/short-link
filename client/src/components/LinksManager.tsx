@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useLinks } from "../hooks/useLinks";
-import {Alert, Tooltip} from "@mui/material";
+import {Tooltip} from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import CircleLoader from "./CircleLoader";
@@ -53,7 +53,7 @@ const LinksManager = () => {
     }
 
     if (error) {
-        return <Alert severity="error">{error}</Alert>
+        return <h1>{`ERROR: ${error}`}</h1>
     }
 
     return (
