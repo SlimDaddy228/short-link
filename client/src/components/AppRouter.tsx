@@ -11,7 +11,7 @@ const AppRouter = observer(() => {
     const { user } = useContext(Context)
     const location = useLocation()
 
-    const redirectToLink = useCallback(async() => {
+    const redirectToLink = useCallback(async () => {
         const path = location.pathname
         const isRedirectLink = path.indexOf(APPLICATION_ROUTES) === -1;
         if (isRedirectLink && path !== MAIN_ROUTE) {

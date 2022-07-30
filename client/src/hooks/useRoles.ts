@@ -1,12 +1,12 @@
 import { toJS } from "mobx";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { Context } from "../index";
 
 export const useRoles = (permission: string) => {
     const [hasRole, setHasRole] = useState<boolean>(false)
     const { user } = useContext(Context)
 
-    const checkHasRole = () => {
+    const checkHasRole = useCallback(() => {
         const roles = toJS(user.data.roles)
         if (!roles) return;
 
@@ -15,11 +15,11 @@ export const useRoles = (permission: string) => {
         })
 
         setHasRole(isHasRole)
-    }
+    }, [user, permission])
 
     useEffect(() => {
         checkHasRole()
-    }, [])
+    }, [checkHasRole])
 
     return [hasRole]
 }

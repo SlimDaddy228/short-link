@@ -1,16 +1,16 @@
-import {useContext, useEffect, useState} from 'react';
-import {observer} from "mobx-react";
-import {Context} from "../index";
-import {NavLink} from "react-router-dom";
-import {authRoutes, publicRoutes, unAuthRouts} from "../routes";
-import {NAV_ICONS} from "../consts/navbar";
-import {useRoles} from '../hooks/useRoles';
-import {Tooltip} from '@mui/material';
-import {MdDarkMode} from "react-icons/md";
-import {BsSun} from "react-icons/bs";
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { observer } from "mobx-react";
+import { Context } from "../index";
+import { NavLink } from "react-router-dom";
+import { authRoutes, publicRoutes, unAuthRouts } from "../routes";
+import { NAV_ICONS } from "../consts/navbar";
+import { useRoles } from '../hooks/useRoles';
+import { Tooltip } from '@mui/material';
+import { MdDarkMode } from "react-icons/md";
+import { BsSun } from "react-icons/bs";
 
 const Navbar = observer(() => {
-    const {user} = useContext(Context)
+    const { user } = useContext(Context)
     const [isDarkMode, setDarkMode] = useState<boolean>(false)
     const [hasAdmin] = useRoles('admin')
     const DarkModeIcon = isDarkMode ? MdDarkMode : BsSun
@@ -27,26 +27,29 @@ const Navbar = observer(() => {
         })
     }
 
-    useEffect(() => {
+    const initDarkMode = useCallback(() => {
         const themeIsDark = localStorage.getItem('theme') === 'dark'
-        if (themeIsDark) {
-            document.documentElement.classList.remove('light')
-            document.documentElement.classList.add('dark')
-            document.documentElement.style.colorScheme = 'dark';
-        } else {
-            document.documentElement.classList.remove('dark')
-            document.documentElement.classList.add('light')
-            document.documentElement.style.colorScheme = 'light';
-        }
+        const remove = themeIsDark ? 'light' : 'dark';
+        const add = themeIsDark ? 'dark' : 'light';
+        const colorScheme = themeIsDark ? 'dark' : 'light';
+
+        document.documentElement.classList.remove(remove)
+        document.documentElement.classList.add(add)
+        document.documentElement.style.colorScheme = colorScheme;
+
         setDarkMode(themeIsDark)
-    }, [isDarkMode])
+    }, [])
+
+    useEffect(() => {
+        initDarkMode()
+    }, [initDarkMode, isDarkMode])
 
     return (
         <>
             <header className={'flex z-auto justify-center items-center h-20 px-3 w-full text-sm font-normal'}>
                 <nav className={'flex items-center justify-between w-full h-20 max-w-4xl'}>
                     <div className={'flex space-x-2'}>
-                        {!user.isAuth && unAuthRouts.map(({path, label}) => {
+                        {!user.isAuth && unAuthRouts.map(({ path, label }) => {
                             return (
                                 <NavLink
                                     to={path}
@@ -57,7 +60,7 @@ const Navbar = observer(() => {
                                 </NavLink>
                             )
                         })}
-                        {hasAdmin && authRoutes.map(({path, label}) => {
+                        {hasAdmin && authRoutes.map(({ path, label }) => {
                             return (
                                 <NavLink
                                     to={path}
@@ -68,7 +71,7 @@ const Navbar = observer(() => {
                                 </NavLink>
                             )
                         })}
-                        {publicRoutes.map(({path, label}) => {
+                        {publicRoutes.map(({ path, label }) => {
                             return (
                                 <NavLink
                                     to={path}
@@ -81,14 +84,14 @@ const Navbar = observer(() => {
                         })}
                     </div>
                     <span className={'flex space-x-2'}>
-                        {NAV_ICONS.map(({Icon, link, toolTip}, index) => {
+                        {NAV_ICONS.map(({ Icon, link, toolTip }, index) => {
                             return (
                                 <Tooltip title={toolTip} key={index}>
                                     <a
                                         href={link}
                                         className={'hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:box-border p-2 rounded-lg hover:text-white ease-in-out duration-300'}
                                     >
-                                        {<Icon size={25}/>}
+                                        {<Icon size={25} />}
                                     </a>
                                 </Tooltip>
                             )
@@ -98,7 +101,7 @@ const Navbar = observer(() => {
                                 onClick={toggleDarkMode}
                                 className={'hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:box-border p-2 rounded-lg hover:text-white ease-in-out duration-300 cursor-pointer'}
                             >
-                                <DarkModeIcon size={25}/>
+                                <DarkModeIcon size={25} />
                             </div>
 
                         </Tooltip>

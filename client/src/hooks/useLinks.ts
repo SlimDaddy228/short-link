@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { AxiosError } from 'axios'
 import { getLinks, removeLinkById } from "../http/linksAPI";
 import { GridRowParams } from "@mui/x-data-grid";
@@ -8,7 +8,7 @@ export const useLinks = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
-    const removeLink = async (params: GridRowParams) => {
+    const removeLink = useCallback(async (params: GridRowParams) => {
         try {
             await removeLinkById(Number(params.id))
             setLinks((prevLinks: any) => {
@@ -19,9 +19,9 @@ export const useLinks = () => {
             setLoading(false)
             setError(error.message)
         }
-    }
+    }, [])
 
-    async function fetchLinks() {
+    const fetchLinks = useCallback(async () => {
         try {
             setError('')
             setLoading(true)
@@ -33,11 +33,11 @@ export const useLinks = () => {
             setLoading(false)
             setError(error.message)
         }
-    }
+    }, [])
 
     useEffect(() => {
         fetchLinks()
-    }, [])
+    }, [fetchLinks])
 
     return [links, error, loading, removeLink]
 }

@@ -1,9 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { observer } from "mobx-react";
 import { Context } from "../index";
 import { generateLink } from "../http/linksAPI";
 import { generateLinkId } from "../utils/utils";
 import { APPLICATION_ROUTES } from '../consts/routes';
+import InputForm, { FormInputData } from "../components/InputForm";
 
 const CreateLink = observer(() => {
     const { user } = useContext(Context)
@@ -36,66 +37,48 @@ const CreateLink = observer(() => {
     const copyLink = async (e: React.SyntheticEvent) => {
         e.preventDefault();
 
-        if ('clipboard' in navigator) {
-            return await navigator.clipboard.writeText(result);
-        }
-        else {
-            return document.execCommand('copy', true, result);
-        }
+        const isClipboard = ('clipboard' in navigator)
+
+        isClipboard ? await navigator.clipboard.writeText(result) : document.execCommand('copy', true, result)
     }
+
+    const onSubmit = (e: React.SyntheticEvent) => result ? copyLink(e) : createLink(e);
+
+    const title: string = useMemo(() => 'Create short link', [])
+    const buttonLabel: string = useMemo(() => result ? "Copy" : "Generate", [result])
+    const formData = useMemo((): Array<FormInputData> => [
+        {
+            id: 'redirectLink',
+            label: 'Your Link',
+            placeholder: 'www.example.com/qwertyQWERTY',
+            type: 'url',
+        },
+        {
+            id: 'link',
+            label: 'Alias (Optional)',
+            placeholder: `${user.isAuth ? "rules" : "Register for used this"}`,
+            disabled: !user.isAuth
+        },
+        {
+            id: 'resultLink',
+            label: 'Result',
+            placeholder: 'Created link',
+            disabled: !result,
+            value: result
+        },
+    ], [user.isAuth, result])
 
     return (
         <div
             className={'flex justify-center items-center'}
             style={{ height: window.innerHeight - 120 }} // 120 - height navbar
         >
-            <div className='flex'>
-                <div className='w-96 m-auto rounded-lg border border-gray-400 shadow-default py-10 px-16'>
-                    <h1 className='text-2xl font-medium mt-4 mb-12 text-center'>
-                        {`Create short link`}
-                    </h1>
-                    <form onSubmit={result ? copyLink : createLink}>
-                        <div>
-                            <label htmlFor='Your link'>{`Your Link`}</label>
-                            <input
-                                type='url'
-                                id='redirectLink'
-                                className={`w-full p-2 border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                placeholder='www.example.com/qwertyQWERTY'
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor='Short Link Name'>{`Alias (Optional)`}</label>
-                            <input
-                                type='text'
-                                id='link'
-                                className={`w-full p-2 border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                placeholder={`${user.isAuth ? "rules" : "Register for used this"}`}
-                                disabled={!user.isAuth}
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor='resultLink'>{`Result`}</label>
-                            <input
-                                type='url'
-                                id='resultLink'
-                                className={`w-full p-2 border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                placeholder={`Created link`}
-                                value={result}
-                                disabled={!result}
-                            />
-                        </div>
-                        <div className='flex justify-center items-center mt-6'>
-                            <button
-                                className={`bg-green-800 py-2 px-4 text-sm text-white rounded focus:outline-none`}
-                            >
-                                {result ? "Copy" : "Generate"}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            <InputForm
+                title={title}
+                buttonLabel={buttonLabel}
+                formData={formData}
+                onSubmit={onSubmit}
+            />
         </div>
     );
 });

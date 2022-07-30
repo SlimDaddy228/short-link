@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { AxiosError } from 'axios'
 import { getUsers, removeUserById } from "../http/userAPI";
 import { GridRowParams } from "@mui/x-data-grid";
@@ -8,7 +8,7 @@ export const useUsers = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
-    const removeUser = async (params: GridRowParams) => {
+    const removeUser = useCallback(async (params: GridRowParams) => {
         try {
             await removeUserById(Number(params.id))
             setUsers((prevUsers: any) => {
@@ -19,9 +19,9 @@ export const useUsers = () => {
             setLoading(false)
             setError(error.message)
         }
-    }
+    }, [])
 
-    async function fetchUsers() {
+    const fetchUsers = useCallback(async () => {
         try {
             setError('')
             setLoading(true)
@@ -33,11 +33,11 @@ export const useUsers = () => {
             setLoading(false)
             setError(error.message)
         }
-    }
+    }, [])
 
     useEffect(() => {
         fetchUsers()
-    }, [])
+    }, [fetchUsers])
 
     return [users, error, loading, removeUser]
 }

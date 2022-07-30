@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useUsers } from "../hooks/useUsers";
 import { DataGrid, GridActionsCellItem, GridColumns, GridRowParams } from "@mui/x-data-grid";
-import {Tooltip} from "@mui/material";
+import { Tooltip } from "@mui/material";
 import CircleLoader from "./CircleLoader";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
